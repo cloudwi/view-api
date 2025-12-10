@@ -18,7 +18,8 @@ class AuthController < ApplicationController
   def me
     render json: {
       id: current_user.id,
-      email: current_user.email
+      email: current_user.email,
+      nickname: current_user.nickname
     }
   end
 
