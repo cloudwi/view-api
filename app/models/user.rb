@@ -1,6 +1,9 @@
 class User < ApplicationRecord
   before_create :generate_nickname
 
+  has_many :views, dependent: :destroy
+  has_many :comments, dependent: :destroy
+
   validates :nickname, uniqueness: true, allow_nil: true
 
   def self.from_omniauth(auth)
