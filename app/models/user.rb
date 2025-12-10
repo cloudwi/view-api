@@ -1,6 +1,8 @@
 class User < ApplicationRecord
   before_create :generate_nickname
 
+  validates :nickname, uniqueness: true, allow_nil: true
+
   def self.from_omniauth(auth)
     where(provider: auth.provider, uid: auth.uid).first_or_create do |user|
       user.email = auth.info.email || "#{auth.uid}@kakao.com"
@@ -10,16 +12,23 @@ class User < ApplicationRecord
   private
 
   def generate_nickname
+    loop do
+      self.nickname = build_nickname
+      break unless User.exists?(nickname: nickname)
+    end
+  end
+
+  def build_nickname
     patterns = [
-      -> { "#{adjective} #{noun}" },                    # 멋진 탕수육
-      -> { "#{noun} #{verb} #{noun2}" },                # 판다 먹는 치킨
-      -> { "#{adverb} #{verb} #{noun}" },               # 열심히 굽는 피자
-      -> { "#{noun}#{suffix}" },                        # 탕수육장인
-      -> { "#{time} #{number}시 #{noun}" },             # 새벽 3시 라면
-      -> { "#{place} #{noun} #{role}" }                 # 우주 치킨 배달부
+      -> { "#{adjective} #{noun}" },
+      -> { "#{noun} #{verb} #{noun2}" },
+      -> { "#{adverb} #{verb} #{noun}" },
+      -> { "#{noun}#{suffix}" },
+      -> { "#{time} #{number}시 #{noun}" },
+      -> { "#{place} #{noun} #{role}" }
     ]
 
-    self.nickname ||= patterns.sample.call
+    patterns.sample.call
   end
 
   def adjective
