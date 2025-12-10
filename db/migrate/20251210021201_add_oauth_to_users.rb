@@ -4,6 +4,6 @@ class AddOauthToUsers < ActiveRecord::Migration[8.1]
     add_column :users, :uid, :string
     add_column :users, :name, :string
     add_column :users, :profile_image, :string
-    add_index :users, [:provider, :uid], unique: true
+    add_index :users, [ :provider, :uid ], unique: true
   end
 end

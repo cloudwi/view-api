@@ -1,5 +1,5 @@
 class AuthController < ApplicationController
-  before_action :authenticate_user!, only: [:me]
+  before_action :authenticate_user!, only: [ :me ]
 
   def kakao_callback
     auth = request.env["omniauth.auth"]

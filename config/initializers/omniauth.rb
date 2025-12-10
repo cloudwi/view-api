@@ -6,5 +6,5 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            client_secret: Rails.application.credentials.dig(:kakao, :client_secret)
 end
 
-OmniAuth.config.allowed_request_methods = [:post, :get]
+OmniAuth.config.allowed_request_methods = [ :post, :get ]
 OmniAuth.config.silence_get_warning = true
