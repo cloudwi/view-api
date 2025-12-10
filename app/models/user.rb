@@ -10,18 +10,63 @@ class User < ApplicationRecord
   private
 
   def generate_nickname
-    adjectives = %w[
+    patterns = [
+      -> { "#{adjective} #{noun}" },                    # 멋진 탕수육
+      -> { "#{noun} #{verb} #{noun2}" },                # 판다 먹는 치킨
+      -> { "#{adverb} #{verb} #{noun}" },               # 열심히 굽는 피자
+      -> { "#{noun}#{suffix}" },                        # 탕수육장인
+      -> { "#{time} #{number}시 #{noun}" },             # 새벽 3시 라면
+      -> { "#{place} #{noun} #{role}" }                 # 우주 치킨 배달부
+    ]
+
+    self.nickname ||= patterns.sample.call
+  end
+
+  def adjective
+    %w[
       행복한 즐거운 신나는 멋진 귀여운 용감한 지혜로운 활발한 상냥한 든든한
       빛나는 따뜻한 시원한 달콤한 상큼한 포근한 씩씩한 깜찍한 당당한 유쾌한
-      느긋한 재빠른 영리한 다정한 명랑한 활기찬 산뜻한 화사한 청량한 건강한
-    ]
+      졸린 배고픈 심심한 설레는 두근두근 반짝반짝 몽글몽글 말랑말랑 쫄깃쫄깃
+    ].sample
+  end
 
-    nouns = %w[
+  def noun
+    %w[
       탕수육 치킨 피자 햄버거 떡볶이 김밥 라면 초밥 파스타 스테이크
       고양이 강아지 토끼 판다 호랑이 사자 여우 곰돌이 펭귄 코알라
-      우주인 탐험가 요리사 마법사 과학자 예술가 음악가 몽상가 모험가 발명가
-    ]
+      수박 망고 딸기 바나나 아보카도 당근 브로콜리 감자 고구마 옥수수
+    ].sample
+  end
 
-    self.nickname ||= "#{adjectives.sample} #{nouns.sample}"
+  def noun2
+    %w[마스터 헌터 러버 킬러 장인 왕 요정 대장 박사 귀신].sample
+  end
+
+  def verb
+    %w[먹는 굽는 볶는 튀기는 사랑하는 찾는 모으는 키우는 그리는 노래하는].sample
+  end
+
+  def adverb
+    %w[열심히 몰래 급하게 천천히 맛있게 신나게 졸리게 행복하게 용감하게 열정적으로].sample
+  end
+
+  def suffix
+    %w[장인 마스터 헌터 러버 왕 대장 요정 박사 덕후 매니아].sample
+  end
+
+  def time
+    %w[새벽 아침 점심 저녁 밤 월요일 금요일 주말 휴일 퇴근후].sample
+  end
+
+  def number
+    rand(1..12)
+  end
+
+  def place
+    %w[우주 바다 하늘 숲속 동네 골목 지하 옥상 비밀 전설의].sample
+  end
+
+  def role
+    %w[배달부 사냥꾼 연구원 탐험가 수호자 감별사 소믈리에 평론가 챔피언 전도사].sample
   end
 end
