@@ -35,6 +35,17 @@ gem "image_processing", "~> 1.2"
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin Ajax possible
 # gem "rack-cors"
 
+# Authentication
+gem "devise"
+gem "omniauth-oauth2"
+gem "omniauth-rails_csrf_protection"
+
+# JWT for API authentication
+gem "jwt"
+
+# Use Rack CORS for handling Cross-Origin Resource Sharing (CORS)
+gem "rack-cors"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
