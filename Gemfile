@@ -14,7 +14,6 @@ gem "image_processing", "~> 1.2"
 gem "rack-cors"
 
 # Authentication
-gem "devise"
 gem "omniauth-kakao-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "jwt"

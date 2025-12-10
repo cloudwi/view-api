@@ -1,6 +1,4 @@
 Rails.application.routes.draw do
-  devise_for :users
-
   # OmniAuth callbacks
   get "/auth/kakao/callback", to: "auth#kakao_callback"
 
