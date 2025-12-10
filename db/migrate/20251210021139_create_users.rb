@@ -6,8 +6,6 @@ class CreateUsers < ActiveRecord::Migration[8.1]
       t.string :email, null: false, default: ""
       t.string :provider
       t.string :uid
-      t.string :name
-      t.string :profile_image
 
       t.timestamps null: false
     end

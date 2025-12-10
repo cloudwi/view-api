@@ -79,9 +79,7 @@ Authorization: Bearer {JWT_TOKEN}
 ```json
 {
   "id": 1,
-  "email": "user@example.com",
-  "name": "홍길동",
-  "profile_image": "https://..."
+  "email": "user@example.com"
 }
 ```
 
