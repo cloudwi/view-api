@@ -215,6 +215,9 @@ GEM
       logger
       rack (>= 2.2.3)
       rack-protection
+    omniauth-kakao-oauth2 (1.0.0)
+      omniauth (~> 2.1)
+      omniauth-oauth2 (~> 1.8)
     omniauth-oauth2 (1.8.0)
       oauth2 (>= 1.4, < 3)
       omniauth (~> 2.0)
@@ -405,7 +408,7 @@ DEPENDENCIES
   image_processing (~> 1.2)
   jwt
   kamal
-  omniauth-oauth2
+  omniauth-kakao-oauth2
   omniauth-rails_csrf_protection
   puma (>= 5.0)
   rack-cors

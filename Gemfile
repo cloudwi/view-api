@@ -37,7 +37,7 @@ gem "image_processing", "~> 1.2"
 
 # Authentication
 gem "devise"
-gem "omniauth-oauth2"
+gem "omniauth-kakao-oauth2"
 gem "omniauth-rails_csrf_protection"
 
 # JWT for API authentication
