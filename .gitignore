@@ -31,3 +31,9 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+# Ignore SQLite files
+*.sqlite
+*.sqlite3
+
+# Ignore IDE files
+.idea/
