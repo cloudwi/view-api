@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::API
+  include ApiResponse
+
   private
 
   def authenticate_user!
@@ -15,9 +17,5 @@ class ApplicationController < ActionController::API
 
       User.find_by(id: decoded[:user_id])
     end
-  end
-
-  def render_unauthorized
-    render json: { error: "Unauthorized" }, status: :unauthorized
   end
 end

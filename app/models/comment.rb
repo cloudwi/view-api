@@ -21,5 +21,5 @@ class Comment < ApplicationRecord
   belongs_to :view
   belongs_to :user
 
-  validates :content, presence: true, length: { maximum: 2000 }
+  validates :content, presence: true, length: { minimum: 1, maximum: 2000 }
 end

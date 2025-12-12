@@ -1,43 +1,49 @@
 class VotesController < ApplicationController
   before_action :authenticate_user!
+  before_action :set_view
 
   # POST /views/:view_id/vote
   def create
-    view = View.find(params[:view_id])
-    view_option = view.view_options.find(params[:view_option_id])
+    view_option = @view.view_options.find_by(id: params[:view_option_id])
+    return render_not_found("ViewOption") unless view_option
 
     @vote = current_user.votes.build(view_option: view_option)
 
     if @vote.save
-      render json: vote_result(view), status: :created
+      render_success(vote_result, status: :created)
     else
-      render json: { errors: @vote.errors.full_messages }, status: :unprocessable_entity
+      render_validation_errors(@vote)
     end
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "View or option not found" }, status: :not_found
   end
 
   # DELETE /views/:view_id/vote
   def destroy
-    view = View.find(params[:view_id])
-    vote = current_user.votes.joins(:view_option)
-                       .where(view_options: { view_id: view.id })
-                       .first
+    vote = find_user_vote
 
     if vote
       vote.destroy
-      render json: vote_result(view)
+      render_success(vote_result)
     else
-      render json: { error: "Vote not found" }, status: :not_found
+      render_not_found("Vote")
     end
-  rescue ActiveRecord::RecordNotFound
-    render json: { error: "View not found" }, status: :not_found
   end
 
   private
 
-  def vote_result(view)
-    options = view.view_options.includes(:votes).map do |opt|
+  def set_view
+    @view = View.includes(view_options: :votes).find(params[:view_id])
+  rescue ActiveRecord::RecordNotFound
+    render_not_found("View")
+  end
+
+  def find_user_vote
+    current_user.votes.joins(:view_option)
+                .where(view_options: { view_id: @view.id })
+                .first
+  end
+
+  def vote_result
+    options = @view.view_options.map do |opt|
       {
         id: opt.id,
         content: opt.content,
@@ -45,12 +51,10 @@ class VotesController < ApplicationController
       }
     end
 
-    my_vote = current_user.votes.joins(:view_option)
-                          .where(view_options: { view_id: view.id })
-                          .first
+    my_vote = find_user_vote
 
     {
-      view_id: view.id,
+      view_id: @view.id,
       options: options,
       total_votes: options.sum { |o| o[:votes_count] },
       my_vote: my_vote ? { option_id: my_vote.view_option_id } : nil

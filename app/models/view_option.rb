@@ -18,5 +18,5 @@ class ViewOption < ApplicationRecord
   belongs_to :view
   has_many :votes, dependent: :destroy
 
-  validates :content, presence: true, length: { maximum: 100 }
+  validates :content, presence: true, length: { minimum: 1, maximum: 100 }
 end

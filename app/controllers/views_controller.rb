@@ -2,13 +2,16 @@ class ViewsController < ApplicationController
   before_action :authenticate_user!, except: [ :index, :show ]
   before_action :set_view, only: [ :show, :update, :destroy ]
   before_action :authorize_user!, only: [ :update, :destroy ]
+  before_action :validate_search_query, only: [ :index ]
 
   include Paginatable
+
+  SEARCH_QUERY_MAX_LENGTH = 100
 
   # GET /views
   def index
     @views = View.includes(:user, view_options: :votes)
-                 .search_by_title(params[:q])
+                 .search_by_title(params[:q]&.strip)
                  .sorted_by(params[:sort])
 
     @views = apply_cursor_pagination(@views).to_a
@@ -27,7 +30,7 @@ class ViewsController < ApplicationController
 
   # GET /views/:id
   def show
-    render json: serialize_view(@view, include_comments: true)
+    render_success(serialize_view(@view, include_comments: true))
   end
 
   # POST /views
@@ -35,18 +38,18 @@ class ViewsController < ApplicationController
     @view = current_user.views.build(view_params)
 
     if @view.save
-      render json: serialize_view(@view), status: :created
+      render_success(serialize_view(@view), status: :created)
     else
-      render json: { errors: @view.errors.full_messages }, status: :unprocessable_entity
+      render_validation_errors(@view)
     end
   end
 
   # PATCH /views/:id
   def update
     if @view.update(view_params)
-      render json: serialize_view(@view)
+      render_success(serialize_view(@view))
     else
-      render json: { errors: @view.errors.full_messages }, status: :unprocessable_entity
+      render_validation_errors(@view)
     end
   end
 
@@ -61,11 +64,20 @@ class ViewsController < ApplicationController
   def set_view
     @view = View.includes(:user, view_options: :votes, comments: :user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
-    render json: { error: "View not found" }, status: :not_found
+    render_not_found("View")
   end
 
   def authorize_user!
-    render json: { error: "Forbidden" }, status: :forbidden unless @view.user_id == current_user.id
+    render_forbidden unless @view.user_id == current_user.id
+  end
+
+  def validate_search_query
+    query = params[:q]
+    return if query.blank?
+
+    if query.length > SEARCH_QUERY_MAX_LENGTH
+      render_error("QUERY_TOO_LONG", "검색어는 #{SEARCH_QUERY_MAX_LENGTH}자 이내여야 합니다")
+    end
   end
 
   def view_params
