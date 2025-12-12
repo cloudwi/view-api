@@ -6,7 +6,7 @@ RSpec.describe 'Auth API', type: :request do
   path '/auth/me' do
     get '현재 로그인한 사용자 정보 조회' do
       tags 'Auth'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
       produces 'application/json'
 
       response '200', '사용자 정보 반환' do

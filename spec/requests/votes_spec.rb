@@ -8,7 +8,7 @@ RSpec.describe 'Votes API', type: :request do
 
     post '투표하기' do
       tags 'Votes'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
       consumes 'application/json'
       produces 'application/json'
 
@@ -66,7 +66,7 @@ RSpec.describe 'Votes API', type: :request do
 
     delete '투표 취소' do
       tags 'Votes'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
       produces 'application/json'
 
       response '200', '투표 취소 성공' do

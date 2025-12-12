@@ -7,7 +7,7 @@ RSpec.describe 'Views API', type: :request do
     get '뷰(의견) 목록 조회' do
       tags 'Views'
       produces 'application/json'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
 
       parameter name: :q, in: :query, type: :string, required: false, description: '제목 검색어'
       parameter name: :sort, in: :query, type: :string, required: false,
@@ -27,7 +27,7 @@ RSpec.describe 'Views API', type: :request do
 
     post '새 뷰(의견) 생성' do
       tags 'Views'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
       consumes 'application/json'
       produces 'application/json'
 
@@ -103,7 +103,7 @@ RSpec.describe 'Views API', type: :request do
     get '뷰(의견) 상세 조회' do
       tags 'Views'
       produces 'application/json'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
 
       response '200', '뷰 상세 정보 반환 (댓글 포함)' do
         schema '$ref' => '#/components/schemas/ViewDetail'
@@ -124,7 +124,7 @@ RSpec.describe 'Views API', type: :request do
 
     patch '뷰(의견) 수정' do
       tags 'Views'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
       consumes 'application/json'
       produces 'application/json'
 
@@ -199,7 +199,7 @@ RSpec.describe 'Views API', type: :request do
 
     delete '뷰(의견) 삭제' do
       tags 'Views'
-      security [bearer_auth: []]
+      security [ bearer_auth: [] ]
 
       response '204', '삭제 성공' do
         let(:Authorization) { "Bearer #{token}" }

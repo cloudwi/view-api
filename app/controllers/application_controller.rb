@@ -2,7 +2,7 @@ class ApplicationController < ActionController::API
   private
 
   def authenticate_user!
-    return render_unauthorized unless current_user
+    render_unauthorized unless current_user
   end
 
   def current_user
