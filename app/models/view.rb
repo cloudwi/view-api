@@ -25,7 +25,7 @@ class View < ApplicationRecord
 
   accepts_nested_attributes_for :view_options, allow_destroy: true
 
-  validates :title, presence: true
+  validates :title, presence: true, length: { maximum: 200 }
   validate :options_count_within_range
 
   # 검색

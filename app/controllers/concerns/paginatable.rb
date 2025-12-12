@@ -45,7 +45,7 @@ module Paginatable
     data = {
       id: record.id,
       created_at: record.created_at.iso8601(6),
-      votes_count: record.try(:votes_count) || 0
+      votes_count: record.votes_count || 0
     }
     Base64.urlsafe_encode64(data.to_json)
   end
@@ -57,7 +57,7 @@ module Paginatable
       created_at: Time.parse(data["created_at"]),
       votes_count: data["votes_count"]
     }
-  rescue
+  rescue JSON::ParserError, ArgumentError
     {}
   end
 end

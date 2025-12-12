@@ -4,13 +4,7 @@ gem "rails", "~> 8.1.1"
 gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 gem "tzinfo-data", platforms: %i[ windows jruby ]
-gem "solid_cache"
-gem "solid_queue"
-gem "solid_cable"
 gem "bootsnap", require: false
-gem "kamal", require: false
-gem "thruster", require: false
-gem "image_processing", "~> 1.2"
 gem "rack-cors"
 
 # Authentication
