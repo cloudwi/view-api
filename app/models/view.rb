@@ -8,6 +8,27 @@ class View < ApplicationRecord
   validates :title, presence: true
   validate :options_count_within_range
 
+  # 검색
+  scope :search_by_title, ->(query) {
+    where("title LIKE ?", "%#{sanitize_sql_like(query)}%") if query.present?
+  }
+
+  # 정렬
+  scope :sort_by_latest, -> { order(created_at: :desc) }
+  scope :sort_by_oldest, -> { order(created_at: :asc) }
+  scope :sort_by_most_votes, -> { order(votes_count: :desc, created_at: :desc) }
+
+  def self.sorted_by(sort_type)
+    case sort_type&.to_s
+    when "oldest"
+      sort_by_oldest
+    when "most_votes"
+      sort_by_most_votes
+    else
+      sort_by_latest
+    end
+  end
+
   private
 
   def options_count_within_range

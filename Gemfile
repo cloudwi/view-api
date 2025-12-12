@@ -18,10 +18,16 @@ gem "omniauth-kakao-oauth2"
 gem "omniauth-rails_csrf_protection"
 gem "jwt"
 
+# API Documentation
+gem "rswag-api"
+gem "rswag-ui"
+
 group :development, :test do
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
   gem "bundler-audit", require: false
   gem "brakeman", require: false
   gem "rubocop", require: false
   gem "rubocop-rails-omakase", require: false
+  gem "rspec-rails"
+  gem "rswag-specs"
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_10_064358) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_12_062039) do
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -53,11 +53,27 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_10_064358) do
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.integer "votes_count", default: 0, null: false
+    t.index ["created_at"], name: "index_views_on_created_at"
+    t.index ["title"], name: "index_views_on_title"
     t.index ["user_id"], name: "index_views_on_user_id"
+    t.index ["votes_count"], name: "index_views_on_votes_count"
+  end
+
+  create_table "votes", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id", null: false
+    t.integer "view_option_id", null: false
+    t.index ["user_id", "view_option_id"], name: "index_votes_on_user_id_and_view_option_id", unique: true
+    t.index ["user_id"], name: "index_votes_on_user_id"
+    t.index ["view_option_id"], name: "index_votes_on_view_option_id"
   end
 
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "views"
   add_foreign_key "view_options", "views"
   add_foreign_key "views", "users"
+  add_foreign_key "votes", "users"
+  add_foreign_key "votes", "view_options"
 end

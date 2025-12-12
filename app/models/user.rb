@@ -3,6 +3,7 @@ class User < ApplicationRecord
 
   has_many :views, dependent: :destroy
   has_many :comments, dependent: :destroy
+  has_many :votes, dependent: :destroy
 
   validates :nickname, uniqueness: true, allow_nil: true
 
