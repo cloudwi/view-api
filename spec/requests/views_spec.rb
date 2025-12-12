@@ -11,8 +11,8 @@ RSpec.describe 'Views API', type: :request do
 
       parameter name: :q, in: :query, type: :string, required: false, description: '제목 검색어'
       parameter name: :sort, in: :query, type: :string, required: false,
-                enum: %w[latest oldest most_votes],
-                description: '정렬 기준 (latest: 최신순, oldest: 오래된순, most_votes: 투표 많은 순)'
+                enum: %w[latest most_votes],
+                description: '정렬 기준 (latest: 최신순, most_votes: 투표 많은 순)'
       parameter name: :per_page, in: :query, type: :integer, required: false,
                 description: '페이지당 항목 수 (기본값: 20, 최대: 100)'
       parameter name: :cursor, in: :query, type: :string, required: false,

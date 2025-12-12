@@ -61,12 +61,11 @@ paths:
           in: query
           schema:
             type: string
-            enum: [latest, oldest, most_votes]
+            enum: [latest, most_votes]
             default: latest
           description: |
             정렬 기준
             - `latest`: 최신순 (기본값)
-            - `oldest`: 오래된순
             - `most_votes`: 투표 많은 순
         - name: per_page
           in: query
