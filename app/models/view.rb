@@ -33,14 +33,32 @@ class View < ApplicationRecord
     where("title LIKE ?", "%#{sanitize_sql_like(query)}%") if query.present?
   }
 
+  # 작성자 필터
+  scope :authored_by, ->(user_id) {
+    where(user_id: user_id) if user_id.present?
+  }
+
   # 정렬
   scope :sort_by_latest, -> { order(created_at: :desc) }
   scope :sort_by_most_votes, -> { order(votes_count: :desc, created_at: :desc) }
+  scope :sort_by_hot, -> {
+    select("views.*,
+            (views.votes_count +
+             (SELECT COUNT(*) FROM comments WHERE comments.view_id = views.id) * 2 +
+             CASE
+               WHEN julianday('now') - julianday(views.created_at) <= 1 THEN 50
+               WHEN julianday('now') - julianday(views.created_at) <= 7 THEN 20
+               ELSE 0
+             END) as popularity_score")
+      .order("popularity_score DESC, views.created_at DESC")
+  }
 
   def self.sorted_by(sort_type)
     case sort_type&.to_s
     when "most_votes"
       sort_by_most_votes
+    when "hot"
+      sort_by_hot
     else
       sort_by_latest
     end

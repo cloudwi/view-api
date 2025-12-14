@@ -4,19 +4,14 @@ info:
   title: View API
   version: v1
   description: 의견 투표 서비스 API
-servers:
-  - url: http://localhost:3000
-    description: Development server
-  - url: https://api.example.com
-    description: Production server
 paths:
-  /auth/me:
+  "/auth/me":
     get:
       summary: 현재 로그인한 사용자 정보 조회
       tags:
-        - Auth
+      - Auth
       security:
-        - bearer_auth: []
+      - bearer_auth: []
       responses:
         '200':
           description: 사용자 정보 반환
@@ -32,282 +27,484 @@ paths:
                   nickname:
                     type: string
                 required:
-                  - id
-                  - nickname
+                - id
+                - nickname
         '401':
           description: 인증 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
-  /views:
+                "$ref": "#/components/schemas/Error"
+  "/views/{view_id}/comments":
+    parameters:
+    - name: view_id
+      in: path
+      description: 뷰 ID
+      required: true
+      schema:
+        type: integer
+    get:
+      summary: 댓글 목록 조회
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      responses:
+        '200':
+          description: 댓글 목록 반환
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      "$ref": "#/components/schemas/Comment"
+                required:
+                - data
+        '404':
+          description: 뷰를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+    post:
+      summary: 댓글 작성
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '201':
+          description: 댓글 작성 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/Comment"
+                required:
+                - data
+        '401':
+          description: 인증 실패
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '404':
+          description: 뷰를 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '422':
+          description: 유효성 검사 실패
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    content:
+                      type: string
+                      description: 댓글 내용 (최소 1자, 최대 2000자)
+                  required:
+                  - content
+              required:
+              - comment
+  "/views/{view_id}/comments/{id}":
+    parameters:
+    - name: view_id
+      in: path
+      description: 뷰 ID
+      required: true
+      schema:
+        type: integer
+    - name: id
+      in: path
+      description: 댓글 ID
+      required: true
+      schema:
+        type: integer
+    patch:
+      summary: 댓글 수정
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      parameters: []
+      responses:
+        '200':
+          description: 댓글 수정 성공
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    "$ref": "#/components/schemas/Comment"
+                required:
+                - data
+        '401':
+          description: 인증 실패
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '403':
+          description: 권한 없음 (본인의 댓글만 수정 가능)
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '404':
+          description: 댓글을 찾을 수 없음
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Error"
+        '422':
+          description: 유효성 검사 실패
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ValidationErrors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: object
+                  properties:
+                    content:
+                      type: string
+                      description: 댓글 내용 (최소 1자, 최대 2000자)
+                  required:
+                  - content
+              required:
+              - comment
+    delete:
+      summary: 댓글 삭제
+      tags:
+      - Comments
+      security:
+      - bearer_auth: []
+      responses:
+        '204':
+          description: 삭제 성공
+        '401':
+          description: 인증 실패
+        '403':
+          description: 권한 없음 (본인의 댓글만 삭제 가능)
+        '404':
+          description: 댓글을 찾을 수 없음
+  "/views":
     get:
       summary: 뷰(의견) 목록 조회
       tags:
-        - Views
+      - Views
       security:
-        - bearer_auth: []
-      description: |
-        뷰 목록을 조회합니다. 커서 기반 페이지네이션을 지원하며, 무한 스크롤에 적합합니다.
-        로그인한 경우 본인의 투표 정보도 포함됩니다.
+      - bearer_auth: []
       parameters:
-        - name: q
-          in: query
-          schema:
-            type: string
-          description: 제목 검색어
-          example: 짜장면
-        - name: sort
-          in: query
-          schema:
-            type: string
-            enum: [latest, most_votes]
-            default: latest
-          description: |
-            정렬 기준
-            - `latest`: 최신순 (기본값)
-            - `most_votes`: 투표 많은 순
-        - name: per_page
-          in: query
-          schema:
-            type: integer
-            minimum: 1
-            maximum: 100
-            default: 20
-          description: 페이지당 항목 수 (최대 100)
-        - name: cursor
-          in: query
-          schema:
-            type: string
-          description: 다음 페이지를 위한 커서 (이전 응답의 meta.next_cursor 값)
+      - name: q
+        in: query
+        required: false
+        description: 제목 검색어
+        schema:
+          type: string
+      - name: author
+        in: query
+        required: false
+        enum:
+        - me
+        description: "작성자 필터 (me: 내가 작성한 뷰만 조회, 인증 필요):\n * `me` \n "
+        schema:
+          type: string
+      - name: sort
+        in: query
+        required: false
+        enum:
+        - latest
+        - most_votes
+        - hot
+        description: '정렬 기준 (latest: 최신순, most_votes: 투표 많은 순, hot: 인기순 - 투표수+댓글수+시간가중)'
+        schema:
+          type: string
+      - name: per_page
+        in: query
+        required: false
+        description: '페이지당 항목 수 (기본값: 20, 최대: 100)'
+        schema:
+          type: integer
+      - name: cursor
+        in: query
+        required: false
+        description: 다음 페이지를 위한 커서
+        schema:
+          type: string
       responses:
         '200':
           description: 뷰 목록 반환
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ViewListResponse'
+                "$ref": "#/components/schemas/ViewListResponse"
     post:
       summary: 새 뷰(의견) 생성
       tags:
-        - Views
+      - Views
       security:
-        - bearer_auth: []
-      description: 새로운 뷰(의견)를 생성합니다. 최소 2개의 선택지가 필요합니다.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ViewInput'
-            example:
-              view:
-                title: 짜장면 vs 짬뽕
-                view_options_attributes:
-                  - content: 짜장면
-                  - content: 짬뽕
+      - bearer_auth: []
+      parameters: []
       responses:
         '201':
           description: 뷰 생성 성공
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ViewListItem'
+                "$ref": "#/components/schemas/ViewListItem"
         '401':
           description: 인증 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '422':
           description: 유효성 검사 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrors'
-  /views/{id}:
+                "$ref": "#/components/schemas/ValidationErrors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                view:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: 뷰 제목
+                    view_options_attributes:
+                      type: array
+                      description: 선택지 목록 (최소 2개)
+                      items:
+                        type: object
+                        properties:
+                          content:
+                            type: string
+                            description: 선택지 내용
+                        required:
+                        - content
+                  required:
+                  - title
+                  - view_options_attributes
+              required:
+              - view
+  "/views/{id}":
     parameters:
-      - name: id
-        in: path
-        required: true
-        schema:
-          type: integer
-        description: 뷰 ID
+    - name: id
+      in: path
+      description: 뷰 ID
+      required: true
+      schema:
+        type: integer
     get:
       summary: 뷰(의견) 상세 조회
       tags:
-        - Views
+      - Views
       security:
-        - bearer_auth: []
-      description: 뷰의 상세 정보를 조회합니다. 댓글 목록이 포함됩니다.
+      - bearer_auth: []
       responses:
         '200':
           description: 뷰 상세 정보 반환 (댓글 포함)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ViewDetail'
+                "$ref": "#/components/schemas/ViewDetail"
         '404':
           description: 뷰를 찾을 수 없음
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
     patch:
       summary: 뷰(의견) 수정
       tags:
-        - Views
+      - Views
       security:
-        - bearer_auth: []
-      description: 본인이 작성한 뷰를 수정합니다.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ViewInput'
-            example:
-              view:
-                title: 수정된 제목
-                view_options_attributes:
-                  - id: 1
-                    content: 수정된 선택지
-                  - id: 2
-                    _destroy: true
+      - bearer_auth: []
+      parameters: []
       responses:
         '200':
           description: 뷰 수정 성공
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ViewListItem'
+                "$ref": "#/components/schemas/ViewListItem"
         '401':
           description: 인증 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '403':
           description: 권한 없음 (본인의 뷰만 수정 가능)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '404':
           description: 뷰를 찾을 수 없음
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                view:
+                  type: object
+                  properties:
+                    title:
+                      type: string
+                      description: 뷰 제목
+                    view_options_attributes:
+                      type: array
+                      description: 선택지 목록
+                      items:
+                        type: object
+                        properties:
+                          id:
+                            type: integer
+                            description: 기존 선택지 ID (수정 시)
+                          content:
+                            type: string
+                            description: 선택지 내용
+                          _destroy:
+                            type: boolean
+                            description: 선택지 삭제 여부
+              required:
+              - view
     delete:
       summary: 뷰(의견) 삭제
       tags:
-        - Views
+      - Views
       security:
-        - bearer_auth: []
-      description: 본인이 작성한 뷰를 삭제합니다.
+      - bearer_auth: []
       responses:
         '204':
           description: 삭제 성공
         '401':
           description: 인증 실패
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '403':
           description: 권한 없음 (본인의 뷰만 삭제 가능)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
         '404':
           description: 뷰를 찾을 수 없음
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /views/{view_id}/vote:
+  "/views/{view_id}/vote":
     parameters:
-      - name: view_id
-        in: path
-        required: true
-        schema:
-          type: integer
-        description: 뷰 ID
+    - name: view_id
+      in: path
+      description: 뷰 ID
+      required: true
+      schema:
+        type: integer
     post:
       summary: 투표하기
       tags:
-        - Votes
+      - Votes
       security:
-        - bearer_auth: []
-      description: 특정 뷰의 선택지에 투표합니다. 하나의 뷰에는 한 번만 투표할 수 있습니다.
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/VoteInput'
-            example:
-              view_option_id: 1
+      - bearer_auth: []
+      parameters: []
       responses:
         '201':
           description: 투표 성공
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VoteResult'
+                "$ref": "#/components/schemas/VoteResult"
         '401':
           description: 인증 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '404':
           description: 뷰 또는 선택지를 찾을 수 없음
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '422':
           description: 유효성 검사 실패 (이미 투표함)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ValidationErrors'
+                "$ref": "#/components/schemas/ValidationErrors"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                view_option_id:
+                  type: integer
+                  description: 투표할 선택지 ID
+              required:
+              - view_option_id
     delete:
       summary: 투표 취소
       tags:
-        - Votes
+      - Votes
       security:
-        - bearer_auth: []
-      description: 본인의 투표를 취소합니다.
+      - bearer_auth: []
       responses:
         '200':
           description: 투표 취소 성공
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/VoteResult'
+                "$ref": "#/components/schemas/VoteResult"
         '401':
           description: 인증 실패
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
         '404':
           description: 뷰 또는 투표를 찾을 수 없음
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Error'
+                "$ref": "#/components/schemas/Error"
+servers:
+- url: http://localhost:3000
+  description: Development server
+- url: https://api.example.com
+  description: Production server
 components:
   securitySchemes:
     bearer_auth:
       type: http
       scheme: bearer
       bearerFormat: JWT
-      description: JWT 토큰을 Authorization 헤더에 포함하여 인증합니다.
   schemas:
     User:
       type: object
@@ -319,8 +516,8 @@ components:
         nickname:
           type: string
       required:
-        - id
-        - nickname
+      - id
+      - nickname
     Author:
       type: object
       properties:
@@ -329,8 +526,8 @@ components:
         nickname:
           type: string
       required:
-        - id
-        - nickname
+      - id
+      - nickname
     ViewOption:
       type: object
       properties:
@@ -341,9 +538,9 @@ components:
         votes_count:
           type: integer
       required:
-        - id
-        - content
-        - votes_count
+      - id
+      - content
+      - votes_count
     MyVote:
       type: object
       nullable: true
@@ -358,15 +555,15 @@ components:
         content:
           type: string
         author:
-          $ref: '#/components/schemas/Author'
+          "$ref": "#/components/schemas/Author"
         created_at:
           type: string
           format: date-time
       required:
-        - id
-        - content
-        - author
-        - created_at
+      - id
+      - content
+      - author
+      - created_at
     ViewListItem:
       type: object
       properties:
@@ -375,15 +572,15 @@ components:
         title:
           type: string
         author:
-          $ref: '#/components/schemas/Author'
+          "$ref": "#/components/schemas/Author"
         options:
           type: array
           items:
-            $ref: '#/components/schemas/ViewOption'
+            "$ref": "#/components/schemas/ViewOption"
         total_votes:
           type: integer
         my_vote:
-          $ref: '#/components/schemas/MyVote'
+          "$ref": "#/components/schemas/MyVote"
         comments_count:
           type: integer
         created_at:
@@ -395,14 +592,14 @@ components:
         edited:
           type: boolean
       required:
-        - id
-        - title
-        - author
-        - options
-        - total_votes
-        - created_at
-        - updated_at
-        - edited
+      - id
+      - title
+      - author
+      - options
+      - total_votes
+      - created_at
+      - updated_at
+      - edited
     ViewDetail:
       type: object
       properties:
@@ -411,19 +608,19 @@ components:
         title:
           type: string
         author:
-          $ref: '#/components/schemas/Author'
+          "$ref": "#/components/schemas/Author"
         options:
           type: array
           items:
-            $ref: '#/components/schemas/ViewOption'
+            "$ref": "#/components/schemas/ViewOption"
         total_votes:
           type: integer
         my_vote:
-          $ref: '#/components/schemas/MyVote'
+          "$ref": "#/components/schemas/MyVote"
         comments:
           type: array
           items:
-            $ref: '#/components/schemas/Comment'
+            "$ref": "#/components/schemas/Comment"
         created_at:
           type: string
           format: date-time
@@ -433,15 +630,15 @@ components:
         edited:
           type: boolean
       required:
-        - id
-        - title
-        - author
-        - options
-        - total_votes
-        - comments
-        - created_at
-        - updated_at
-        - edited
+      - id
+      - title
+      - author
+      - options
+      - total_votes
+      - comments
+      - created_at
+      - updated_at
+      - edited
     ViewInput:
       type: object
       properties:
@@ -450,37 +647,31 @@ components:
           properties:
             title:
               type: string
-              description: 뷰 제목
             view_options_attributes:
               type: array
-              description: 선택지 목록 (최소 2개)
               items:
                 type: object
                 properties:
                   id:
                     type: integer
-                    description: 기존 선택지 ID (수정 시)
                   content:
                     type: string
-                    description: 선택지 내용
                   _destroy:
                     type: boolean
-                    description: 선택지 삭제 여부
                 required:
-                  - content
+                - content
           required:
-            - title
-            - view_options_attributes
+          - title
+          - view_options_attributes
       required:
-        - view
+      - view
     VoteInput:
       type: object
       properties:
         view_option_id:
           type: integer
-          description: 투표할 선택지 ID
       required:
-        - view_option_id
+      - view_option_id
     VoteResult:
       type: object
       properties:
@@ -489,15 +680,15 @@ components:
         options:
           type: array
           items:
-            $ref: '#/components/schemas/ViewOption'
+            "$ref": "#/components/schemas/ViewOption"
         total_votes:
           type: integer
         my_vote:
-          $ref: '#/components/schemas/MyVote'
+          "$ref": "#/components/schemas/MyVote"
       required:
-        - view_id
-        - options
-        - total_votes
+      - view_id
+      - options
+      - total_votes
     Error:
       type: object
       properties:
@@ -515,27 +706,23 @@ components:
       properties:
         per_page:
           type: integer
-          description: 페이지당 항목 수
-          example: 20
         has_next:
           type: boolean
-          description: 다음 페이지 존재 여부
         next_cursor:
           type: string
           nullable: true
-          description: 다음 페이지를 위한 커서 (has_next가 false이면 null)
       required:
-        - per_page
-        - has_next
+      - per_page
+      - has_next
     ViewListResponse:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/ViewListItem'
+            "$ref": "#/components/schemas/ViewListItem"
         meta:
-          $ref: '#/components/schemas/PaginationMeta'
+          "$ref": "#/components/schemas/PaginationMeta"
       required:
-        - data
-        - meta
+      - data
+      - meta

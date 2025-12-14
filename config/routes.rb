@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   # Views API
   resources :views, only: [ :index, :show, :create, :update, :destroy ] do
     resource :vote, only: [ :create, :destroy ]
-    resources :comments, only: [ :create, :update, :destroy ]
+    resources :comments, only: [ :index, :create, :update, :destroy ]
   end
 
   # Health check

@@ -10,8 +10,11 @@ class ViewsController < ApplicationController
 
   # GET /views
   def index
+    author_id = params[:author] == "me" ? current_user&.id : nil
+
     @views = View.includes(:user, view_options: :votes)
                  .search_by_title(params[:q]&.strip)
+                 .authored_by(author_id)
                  .sorted_by(params[:sort])
 
     @views = apply_cursor_pagination(@views).to_a

@@ -10,9 +10,12 @@ RSpec.describe 'Views API', type: :request do
       security [ bearer_auth: [] ]
 
       parameter name: :q, in: :query, type: :string, required: false, description: '제목 검색어'
+      parameter name: :author, in: :query, type: :string, required: false,
+                enum: %w[me],
+                description: '작성자 필터 (me: 내가 작성한 뷰만 조회, 인증 필요)'
       parameter name: :sort, in: :query, type: :string, required: false,
-                enum: %w[latest most_votes],
-                description: '정렬 기준 (latest: 최신순, most_votes: 투표 많은 순)'
+                enum: %w[latest most_votes hot],
+                description: '정렬 기준 (latest: 최신순, most_votes: 투표 많은 순, hot: 인기순 - 투표수+댓글수+시간가중)'
       parameter name: :per_page, in: :query, type: :integer, required: false,
                 description: '페이지당 항목 수 (기본값: 20, 최대: 100)'
       parameter name: :cursor, in: :query, type: :string, required: false,
