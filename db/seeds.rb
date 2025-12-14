@@ -148,7 +148,7 @@ users << main_user
 puts "  - #{main_user.nickname} 생성"
 
 # 추가 유저들 (댓글/투표용)
-10.times do |i|
+30.times do |i|
   user = User.create!(
     email: "user#{i + 1}@example.com",
     nickname: "유저#{i + 1}",
@@ -156,7 +156,7 @@ puts "  - #{main_user.nickname} 생성"
     uid: "test_uid_#{i + 2}"
   )
   users << user
-  print "  - #{user.nickname} 생성\n" if (i + 1) % 5 == 0
+  print "  - #{user.nickname} 생성\n" if (i + 1) % 10 == 0
 end
 
 puts "✅ 총 #{users.count}명의 유저 생성 완료\n"
@@ -186,8 +186,8 @@ puts "🗳️  투표 데이터 생성 중..."
 vote_count = 0
 
 created_views.each do |view|
-  # 뷰마다 랜덤하게 0-30명이 투표
-  voters = users.sample(rand(0..30))
+  # 뷰마다 랜덤하게 10-50명이 투표 (더 활발한 느낌)
+  voters = users.sample(rand(10..50))
 
   voters.each do |voter|
     option = view.view_options.sample
@@ -232,9 +232,9 @@ comment_templates = [
 ]
 
 comment_count = 0
-created_views.sample(60).each do |view|
-  # 각 뷰마다 0-8개의 댓글
-  rand(0..8).times do
+created_views.each do |view|
+  # 각 뷰마다 1-12개의 댓글
+  rand(1..12).times do
     commenter = users.sample
     option = view.view_options.sample
 
