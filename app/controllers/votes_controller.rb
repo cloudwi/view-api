@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class VotesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_view
@@ -46,14 +48,7 @@ class VotesController < ApplicationController
     # 투표 후 counter cache 갱신을 위해 view_options만 reload
     @view.view_options.reload
 
-    options = @view.view_options.map do |opt|
-      {
-        id: opt.id,
-        content: opt.content,
-        votes_count: opt.votes_count
-      }
-    end
-
+    options = @view.view_options.map { |opt| ViewOptionSerializer.new(opt).as_json }
     my_vote = find_user_vote
 
     {

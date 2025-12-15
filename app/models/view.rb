@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # == Schema Information
 #
 # Table name: views
@@ -19,6 +21,17 @@
 #  user_id  (user_id => users.id)
 #
 class View < ApplicationRecord
+  # 상수 정의
+  TITLE_MIN_LENGTH = 2
+  TITLE_MAX_LENGTH = 200
+  MIN_OPTIONS = 2
+  MAX_OPTIONS = 20
+
+  # Hot 정렬 가중치
+  HOT_COMMENT_WEIGHT = 2
+  HOT_DAY_1_BONUS = 50
+  HOT_DAY_7_BONUS = 20
+
   belongs_to :user
   belongs_to :category
   has_many :view_options, dependent: :destroy
@@ -26,7 +39,7 @@ class View < ApplicationRecord
 
   accepts_nested_attributes_for :view_options, allow_destroy: true
 
-  validates :title, presence: true, length: { minimum: 2, maximum: 200 }
+  validates :title, presence: true, length: { minimum: TITLE_MIN_LENGTH, maximum: TITLE_MAX_LENGTH }
   validates :category_id, presence: true
   validate :options_count_within_range
 
@@ -53,10 +66,10 @@ class View < ApplicationRecord
 
     select("views.*,
             (views.votes_count +
-             (SELECT COUNT(*) FROM comments WHERE comments.view_id = views.id) * 2 +
+             (SELECT COUNT(*) FROM comments WHERE comments.view_id = views.id) * #{HOT_COMMENT_WEIGHT} +
              CASE
-               WHEN #{days_diff_sql} <= 1 THEN 50
-               WHEN #{days_diff_sql} <= 7 THEN 20
+               WHEN #{days_diff_sql} <= 1 THEN #{HOT_DAY_1_BONUS}
+               WHEN #{days_diff_sql} <= 7 THEN #{HOT_DAY_7_BONUS}
                ELSE 0
              END) as popularity_score")
       .order("popularity_score DESC, views.created_at DESC")
@@ -84,10 +97,12 @@ class View < ApplicationRecord
   private
 
   def options_count_within_range
-    if view_options.reject(&:marked_for_destruction?).size < 2
-      errors.add(:view_options, "최소 2개의 선택사항이 필요합니다")
-    elsif view_options.reject(&:marked_for_destruction?).size > 20
-      errors.add(:view_options, "최대 20개의 선택사항만 가능합니다")
+    count = view_options.reject(&:marked_for_destruction?).size
+
+    if count < MIN_OPTIONS
+      errors.add(:view_options, "최소 #{MIN_OPTIONS}개의 선택사항이 필요합니다")
+    elsif count > MAX_OPTIONS
+      errors.add(:view_options, "최대 #{MAX_OPTIONS}개의 선택사항만 가능합니다")
     end
   end
 end

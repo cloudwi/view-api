@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   # OmniAuth routes
   get "/auth/:provider", to: "auth#passthru"
   get "/auth/kakao/callback", to: "auth#kakao_callback"
-  get "auth/me", to: "auth#me"
+  get "/auth/me", to: "auth#me"
 
   # Categories API
   resources :categories, only: [ :index ]

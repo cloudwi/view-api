@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ViewSerializer
   def initialize(view, current_user: nil, include_comments: false)
     @view = view
@@ -46,13 +48,7 @@ class ViewSerializer
   end
 
   def options_json
-    @options_json ||= @view.view_options.map do |opt|
-      {
-        id: opt.id,
-        content: opt.content,
-        votes_count: opt.votes_count
-      }
-    end
+    @options_json ||= @view.view_options.map { |opt| ViewOptionSerializer.new(opt).as_json }
   end
 
   def my_vote_json
