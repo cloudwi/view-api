@@ -64,9 +64,10 @@ class View < ApplicationRecord
                       "julianday('now') - julianday(views.created_at)"
     end
 
+    # counter cache를 사용하여 성능 향상
     select("views.*,
             (views.votes_count +
-             (SELECT COUNT(*) FROM comments WHERE comments.view_id = views.id) * #{HOT_COMMENT_WEIGHT} +
+             views.comments_count * #{HOT_COMMENT_WEIGHT} +
              CASE
                WHEN #{days_diff_sql} <= 1 THEN #{HOT_DAY_1_BONUS}
                WHEN #{days_diff_sql} <= 7 THEN #{HOT_DAY_7_BONUS}
