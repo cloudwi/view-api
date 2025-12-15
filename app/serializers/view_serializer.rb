@@ -50,7 +50,8 @@ class ViewSerializer
       {
         id: opt.id,
         content: opt.content,
-        votes_count: opt.votes.size
+        # .length는 이미 로드된 컬렉션 사용 (N+1 방지)
+        votes_count: opt.votes.length
       }
     end
   end
@@ -58,13 +59,18 @@ class ViewSerializer
   def my_vote_json
     return nil unless @current_user
 
-    option_ids = @view.view_options.map(&:id)
-    vote = @current_user.votes.find_by(view_option_id: option_ids)
-    vote ? { option_id: vote.view_option_id } : nil
+    # 이미 로드된 view_options의 votes에서 찾기 (추가 쿼리 방지)
+    @view.view_options.each do |opt|
+      vote = opt.votes.find { |v| v.user_id == @current_user.id }
+      return { option_id: opt.id } if vote
+    end
+    nil
   end
 
   def comments_json
-    @view.comments.order(created_at: :asc).map do |comment|
+    # 이미 로드된 comments 사용, 정렬은 메모리에서 수행
+    sorted_comments = @view.comments.sort_by(&:created_at)
+    sorted_comments.map do |comment|
       {
         id: comment.id,
         content: comment.content,

@@ -81,9 +81,9 @@ class ViewsController < ApplicationController
     query = params[:q]
     return if query.blank?
 
-    if query.length > SEARCH_QUERY_MAX_LENGTH
-      render_error("QUERY_TOO_LONG", "검색어는 #{SEARCH_QUERY_MAX_LENGTH}자 이내여야 합니다")
-    end
+    return unless query.length > SEARCH_QUERY_MAX_LENGTH
+
+    render_error("QUERY_TOO_LONG", "검색어는 #{SEARCH_QUERY_MAX_LENGTH}자 이내여야 합니다")
   end
 
   def validate_vote_filter
