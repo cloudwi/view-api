@@ -3,16 +3,18 @@
 # 카테고리 정의
 CATEGORIES = [
   { name: "일상", slug: "daily", description: "일상적인 이야기", icon: "☀️", display_order: 0 },
-  { name: "음식", slug: "food", description: "맛집, 요리, 음식 추천", icon: "🍔", display_order: 1 },
-  { name: "연애", slug: "relationship", description: "연애, 썸, 관계 고민", icon: "💕", display_order: 2 },
-  { name: "직장", slug: "work", description: "직장생활, 커리어", icon: "💼", display_order: 3 },
-  { name: "취미", slug: "hobby", description: "취미, 여가, 운동", icon: "🎮", display_order: 4 },
-  { name: "패션/뷰티", slug: "fashion", description: "패션, 뷰티, 쇼핑", icon: "👗", display_order: 5 },
+  { name: "음식/맛집", slug: "food", description: "맛집, 요리, 음식 추천", icon: "🍔", display_order: 1 },
+  { name: "IT/디지털", slug: "tech", description: "IT, 디지털, 기기", icon: "💻", display_order: 2 },
+  { name: "연애/썸", slug: "relationship", description: "연애, 썸, 관계 고민", icon: "💕", display_order: 3 },
+  { name: "직장/커리어", slug: "work", description: "직장생활, 커리어", icon: "💼", display_order: 4 },
+  { name: "취미/여가", slug: "hobby", description: "취미, 여가, 엔터테인먼트", icon: "🎮", display_order: 5 },
   { name: "게임", slug: "game", description: "게임, e스포츠", icon: "🕹️", display_order: 6 },
   { name: "여행", slug: "travel", description: "여행, 휴가", icon: "✈️", display_order: 7 },
-  { name: "주식/투자", slug: "stock", description: "주식, 코인, 재테크", icon: "📈", display_order: 8 },
-  { name: "19+", slug: "adult", description: "성인 주제", icon: "🔞", display_order: 9 },
-  { name: "기타", slug: "etc", description: "기타 주제", icon: "📌", display_order: 10 }
+  { name: "패션/뷰티", slug: "fashion", description: "패션, 뷰티, 쇼핑", icon: "👗", display_order: 8 },
+  { name: "재테크/투자", slug: "finance", description: "재테크, 주식, 투자", icon: "📈", display_order: 9 },
+  { name: "운동/헬스", slug: "fitness", description: "운동, 건강, 헬스", icon: "💪", display_order: 10 },
+  { name: "19+", slug: "adult", description: "성인 주제", icon: "🔞", display_order: 11 },
+  { name: "기타", slug: "etc", description: "기타 주제", icon: "📌", display_order: 12 }
 ].freeze
 
 # 운영용 뷰 데이터 (카테고리 slug 사용)
@@ -34,26 +36,25 @@ PRODUCTION_VIEWS = [
   { title: "소주는 어떤 걸로?", options: [ "참이슬", "처음처럼", "좋은데이", "안 마심" ], category: "food" },
   { title: "맥주 vs 소주", options: [ "맥주", "소주", "폭탄주", "안 마심" ], category: "food" },
 
-  # IT/기술/디지털 (15개)
-  { title: "아이폰 vs 갤럭시", options: %w[아이폰 갤럭시], category: "daily" },
-  { title: "맥북 vs 윈도우 노트북", options: [ "맥북", "윈도우", "둘 다 사용" ], category: "daily" },
-  { title: "에어팟 vs 버즈", options: [ "에어팟", "버즈", "다른 브랜드" ], category: "daily" },
-  { title: "넷플릭스 vs 티빙 vs 웨이브", options: %w[넷플릭스 티빙 웨이브 쿠팡플레이 디즈니+], category: "hobby" },
-  { title: "유튜브 프리미엄 쓰시나요?", options: [ "쓴다", "안 쓴다", "고민 중" ], category: "daily" },
-  { title: "게임 플랫폼은?", options: [ "PS5", "닌텐도 스위치", "Xbox", "PC", "모바일만" ], category: "game" },
-  { title: "노트북 구매 예산은?", options: [ "100만원 이하", "100-200만원", "200-300만원", "300만원 이상" ], category: "daily" },
-  { title: "모니터 몇 개 쓰세요?", options: [ "1대", "2대(듀얼)", "3대 이상" ], category: "daily" },
-  { title: "키보드 취향은?", options: %w[기계식 멤브레인 무접점 매직키보드], category: "daily" },
-  { title: "마우스 vs 트랙패드", options: [ "마우스", "트랙패드", "둘 다" ], category: "daily" },
-  { title: "클라우드 스토리지 뭐 쓰세요?", options: [ "구글 드라이브", "아이클라우드", "네이버 마이박스", "드롭박스", "안 씀" ], category: "daily" },
-  { title: "스마트워치 쓰시나요?", options: [ "애플워치", "갤럭시워치", "다른 브랜드", "안 씀" ], category: "daily" },
-  { title: "태블릿 필요하신가요?", options: [ "필수", "있으면 좋음", "필요 없음" ], category: "daily" },
-  { title: "크롬 vs 사파리 vs 엣지", options: %w[크롬 사파리 엣지 파이어폭스], category: "daily" },
-  { title: "AI 챗봇 뭐 쓰세요?", options: [ "ChatGPT", "Claude", "Gemini", "안 씀" ], category: "daily" },
+  # IT/디지털 (15개)
+  { title: "아이폰 vs 갤럭시", options: %w[아이폰 갤럭시], category: "tech" },
+  { title: "맥북 vs 윈도우 노트북", options: [ "맥북", "윈도우", "둘 다 사용" ], category: "tech" },
+  { title: "에어팟 vs 버즈", options: [ "에어팟", "버즈", "다른 브랜드" ], category: "tech" },
+  { title: "넷플릭스 vs 티빙 vs 웨이브", options: %w[넷플릭스 티빙 웨이브 쿠팡플레이 디즈니+], category: "tech" },
+  { title: "유튜브 프리미엄 쓰시나요?", options: [ "쓴다", "안 쓴다", "고민 중" ], category: "tech" },
+  { title: "노트북 구매 예산은?", options: [ "100만원 이하", "100-200만원", "200-300만원", "300만원 이상" ], category: "tech" },
+  { title: "모니터 몇 개 쓰세요?", options: [ "1대", "2대(듀얼)", "3대 이상" ], category: "tech" },
+  { title: "키보드 취향은?", options: %w[기계식 멤브레인 무접점 매직키보드], category: "tech" },
+  { title: "마우스 vs 트랙패드", options: [ "마우스", "트랙패드", "둘 다" ], category: "tech" },
+  { title: "클라우드 스토리지 뭐 쓰세요?", options: [ "구글 드라이브", "아이클라우드", "네이버 마이박스", "드롭박스", "안 씀" ], category: "tech" },
+  { title: "스마트워치 쓰시나요?", options: [ "애플워치", "갤럭시워치", "다른 브랜드", "안 씀" ], category: "tech" },
+  { title: "태블릿 필요하신가요?", options: [ "필수", "있으면 좋음", "필요 없음" ], category: "tech" },
+  { title: "크롬 vs 사파리 vs 엣지", options: %w[크롬 사파리 엣지 파이어폭스], category: "tech" },
+  { title: "AI 챗봇 뭐 쓰세요?", options: [ "ChatGPT", "Claude", "Gemini", "안 씀" ], category: "tech" },
+  { title: "게임 플랫폼은?", options: [ "PS5", "닌텐도 스위치", "Xbox", "PC", "모바일만" ], category: "tech" },
 
-  # 라이프스타일 (15개)
+  # 일상 (20개)
   { title: "아침형 vs 저녁형 인간", options: %w[아침형 저녁형], category: "daily" },
-  { title: "재택근무 vs 출근", options: %w[재택 출근 하이브리드], category: "work" },
   { title: "혼밥 괜찮으신가요?", options: %w[좋아함 싫어함 상관없음], category: "daily" },
   { title: "계획형 vs 즉흥형", options: %w[계획형 즉흥형 반반], category: "daily" },
   { title: "현금 vs 카드", options: %w[현금 카드 모바일페이], category: "daily" },
@@ -67,8 +68,16 @@ PRODUCTION_VIEWS = [
   { title: "집 청소 얼마나 자주?", options: [ "매일", "주 2-3회", "주 1회", "한 달에 한 번" ], category: "daily" },
   { title: "빨래 모아서 vs 바로바로", options: %w[모아서 바로바로], category: "daily" },
   { title: "분리수거 잘하시나요?", options: [ "철저히", "대충", "가끔 헷갈림" ], category: "daily" },
+  { title: "배달앱 주로 어디?", options: %w[배민 쿠팡이츠 요기요], category: "daily" },
+  { title: "택배 얼마나 자주 받으시나요?", options: [ "주 5회 이상", "주 2-4회", "주 1회", "한 달에 몇 번" ], category: "daily" },
+  { title: "중고거래 하시나요?", options: [ "자주", "가끔", "안 함" ], category: "daily" },
+  { title: "주거래 은행", options: %w[카카오뱅크 토스뱅크 시중은행], category: "daily" },
+  { title: "월급 타면 제일 먼저?", options: %w[저축 카드값 생활비 투자 쇼핑], category: "daily" },
+  { title: "보험 몇 개 들어놓으셨어요?", options: [ "1-2개", "3-4개", "5개 이상", "없음" ], category: "daily" },
+  { title: "건강검진 정기적으로 받으시나요?", options: [ "매년", "2-3년에 한 번", "안 받음" ], category: "daily" },
+  { title: "비타민 챙겨드시나요?", options: [ "매일", "가끔", "안 먹음" ], category: "daily" },
 
-  # 여행/레저 (10개)
+  # 여행 (10개)
   { title: "여름 휴가지 추천", options: %w[제주도 부산 강릉 해외], category: "travel" },
   { title: "여행 스타일", options: %w[계획형 즉흥형], category: "travel" },
   { title: "국내 vs 해외 여행", options: [ "국내", "해외", "둘 다" ], category: "travel" },
@@ -80,7 +89,7 @@ PRODUCTION_VIEWS = [
   { title: "산 vs 바다", options: [ "산", "바다", "둘 다" ], category: "travel" },
   { title: "테마파크 좋아하시나요?", options: %w[좋아함 보통 싫어함], category: "travel" },
 
-  # 쇼핑/패션 (10개)
+  # 패션/뷰티 (10개)
   { title: "운동화 브랜드 픽", options: %w[나이키 아디다스 뉴발란스 아식스 컨버스], category: "fashion" },
   { title: "청바지 핏은?", options: %w[스키니 슬림 스트레이트 와이드], category: "fashion" },
   { title: "옷 쇼핑 어디서?", options: [ "온라인", "오프라인", "둘 다" ], category: "fashion" },
@@ -88,11 +97,11 @@ PRODUCTION_VIEWS = [
   { title: "가방 선호도", options: [ "백팩", "크로스백", "토트백", "안 들고 다님" ], category: "fashion" },
   { title: "신발 몇 켤레 가지고 계세요?", options: [ "3켤레 이하", "4-6켤레", "7-10켤레", "10켤레 이상" ], category: "fashion" },
   { title: "명품 관심 있으세요?", options: [ "관심 많음", "보통", "관심 없음" ], category: "fashion" },
-  { title: "배달앱 주로 어디?", options: %w[배민 쿠팡이츠 요기요], category: "daily" },
-  { title: "택배 얼마나 자주 받으시나요?", options: [ "주 5회 이상", "주 2-4회", "주 1회", "한 달에 몇 번" ], category: "daily" },
-  { title: "중고거래 하시나요?", options: [ "자주", "가끔", "안 함" ], category: "daily" },
+  { title: "스킨케어 루틴", options: [ "간단히", "꼼꼼히", "안 함" ], category: "fashion" },
+  { title: "향수 뿌리시나요?", options: [ "매일", "가끔", "안 뿌림" ], category: "fashion" },
+  { title: "헤어 스타일링 하시나요?", options: [ "매일", "외출 시만", "거의 안 함" ], category: "fashion" },
 
-  # 엔터테인먼트 (10개)
+  # 취미/여가 (12개)
   { title: "영화관 vs 집관", options: [ "영화관", "집", "둘 다" ], category: "hobby" },
   { title: "드라마 vs 영화", options: [ "드라마", "영화", "둘 다" ], category: "hobby" },
   { title: "책 vs 유튜브", options: [ "책", "유튜브", "둘 다" ], category: "hobby" },
@@ -100,11 +109,24 @@ PRODUCTION_VIEWS = [
   { title: "음악 스트리밍 서비스", options: %w[멜론 지니 플로 스포티파이 유튜브뮤직], category: "hobby" },
   { title: "노래방 좋아하세요?", options: %w[좋아함 보통 싫어함], category: "hobby" },
   { title: "콘서트 자주 가시나요?", options: [ "자주", "가끔", "거의 안 감" ], category: "hobby" },
-  { title: "게임 장르 선호도", options: [ "RPG", "FPS", "AOS/MOBA", "캐주얼", "안 함" ], category: "game" },
   { title: "웹툰 vs 웹소설", options: [ "웹툰", "웹소설", "둘 다", "안 봄" ], category: "hobby" },
   { title: "팟캐스트 들으세요?", options: [ "자주", "가끔", "안 들음" ], category: "hobby" },
+  { title: "악기 연주 하시나요?", options: [ "잘함", "조금", "못함" ], category: "hobby" },
+  { title: "그림 그리기 좋아하세요?", options: %w[좋아함 보통 싫어함], category: "hobby" },
+  { title: "요리 자주 하시나요?", options: [ "자주", "가끔", "거의 안 함" ], category: "hobby" },
+
+  # 게임 (8개)
+  { title: "게임 장르 선호도", options: [ "RPG", "FPS", "AOS/MOBA", "캐주얼", "안 함" ], category: "game" },
+  { title: "롤 vs 배그", options: [ "롤", "배그", "둘 다", "안 함" ], category: "game" },
+  { title: "PC방 자주 가시나요?", options: [ "자주", "가끔", "거의 안 감" ], category: "game" },
+  { title: "게임 과금 하시나요?", options: [ "자주", "가끔", "안 함" ], category: "game" },
+  { title: "e스포츠 보시나요?", options: [ "자주", "가끔", "안 봄" ], category: "game" },
+  { title: "모바일 게임 추천", options: %w[RPG 전략 캐주얼 액션 안함], category: "game" },
+  { title: "닌텐도 vs 플스", options: [ "닌텐도", "플레이스테이션", "둘 다", "안 함" ], category: "game" },
+  { title: "게임 스트리밍 보시나요?", options: [ "자주", "가끔", "안 봄" ], category: "game" },
 
   # 직장/커리어 (10개)
+  { title: "재택근무 vs 출근", options: %w[재택 출근 하이브리드], category: "work" },
   { title: "회식 어떻게 생각하세요?", options: [ "좋다", "싫다", "가끔은 OK" ], category: "work" },
   { title: "점심 혼밥 vs 동료랑", options: %w[혼밥 동료랑 상황따라], category: "work" },
   { title: "칼퇴 vs 야근", options: [ "칼퇴 필수", "필요하면 야근", "야근 많음" ], category: "work" },
@@ -113,27 +135,38 @@ PRODUCTION_VIEWS = [
   { title: "이직 주기는?", options: %w[1년 2-3년 4-5년 장기근속], category: "work" },
   { title: "대기업 vs 스타트업", options: %w[대기업 스타트업 상관없음], category: "work" },
   { title: "직장 선택 기준 1순위", options: %w[연봉 워라밸 커리어 복지 위치], category: "work" },
-  { title: "점심시간 몇 분?", options: [ "30분", "1시간", "1시간 30분", "2시간" ], category: "work" },
   { title: "업무 소통 도구", options: %w[슬랙 잔디 카톡 이메일 MS팀즈], category: "work" },
 
-  # 건강/운동 (5개)
-  { title: "운동 어떻게 하세요?", options: [ "헬스", "러닝", "수영", "홈트", "요가/필라테스", "안 함" ], category: "hobby" },
-  { title: "운동 시간대는?", options: %w[아침 점심 저녁 심야], category: "hobby" },
-  { title: "헬스장 vs 홈트", options: [ "헬스장", "홈트", "둘 다" ], category: "hobby" },
-  { title: "건강검진 정기적으로 받으시나요?", options: [ "매년", "2-3년에 한 번", "안 받음" ], category: "daily" },
-  { title: "비타민 챙겨드시나요?", options: [ "매일", "가끔", "안 먹음" ], category: "daily" },
+  # 운동/헬스 (8개)
+  { title: "운동 어떻게 하세요?", options: [ "헬스", "러닝", "수영", "홈트", "요가/필라테스", "안 함" ], category: "fitness" },
+  { title: "운동 시간대는?", options: %w[아침 점심 저녁 심야], category: "fitness" },
+  { title: "헬스장 vs 홈트", options: [ "헬스장", "홈트", "둘 다" ], category: "fitness" },
+  { title: "PT 받아보셨나요?", options: [ "받는 중", "받아봄", "안 받아봄" ], category: "fitness" },
+  { title: "러닝 vs 자전거", options: [ "러닝", "자전거", "둘 다", "안 함" ], category: "fitness" },
+  { title: "근력 vs 유산소", options: [ "근력", "유산소", "둘 다" ], category: "fitness" },
+  { title: "운동 후 단백질 보충제", options: [ "먹는다", "안 먹는다", "가끔" ], category: "fitness" },
+  { title: "스트레칭 자주 하시나요?", options: [ "매일", "가끔", "거의 안 함" ], category: "fitness" },
 
-  # 주식/투자 (10개)
-  { title: "저축 vs 투자", options: %w[저축 투자 반반], category: "stock" },
-  { title: "주거래 은행", options: %w[카카오뱅크 토스뱅크 시중은행], category: "daily" },
-  { title: "주식 하시나요?", options: [ "한다", "안 한다", "관심 있음" ], category: "stock" },
-  { title: "월급 타면 제일 먼저?", options: %w[저축 카드값 생활비 투자 쇼핑], category: "daily" },
-  { title: "보험 몇 개 들어놓으셨어요?", options: [ "1-2개", "3-4개", "5개 이상", "없음" ], category: "daily" },
-  { title: "삼성전자 vs 테슬라 장기투자", options: [ "삼성전자", "테슬라", "둘 다", "둘 다 안함" ], category: "stock" },
-  { title: "코인 투자 하시나요?", options: [ "비트코인만", "알트코인도", "안 함", "관심 있음" ], category: "stock" },
-  { title: "ETF vs 개별종목", options: [ "ETF", "개별종목", "둘 다" ], category: "stock" },
-  { title: "배당주 vs 성장주", options: %w[배당주 성장주 반반], category: "stock" },
-  { title: "투자 공부 어디서?", options: %w[유튜브 책 강의 커뮤니티], category: "stock" },
+  # 재테크/투자 (10개)
+  { title: "저축 vs 투자", options: %w[저축 투자 반반], category: "finance" },
+  { title: "주식 하시나요?", options: [ "한다", "안 한다", "관심 있음" ], category: "finance" },
+  { title: "삼성전자 vs 테슬라 장기투자", options: [ "삼성전자", "테슬라", "둘 다", "둘 다 안함" ], category: "finance" },
+  { title: "코인 투자 하시나요?", options: [ "비트코인만", "알트코인도", "안 함", "관심 있음" ], category: "finance" },
+  { title: "ETF vs 개별종목", options: [ "ETF", "개별종목", "둘 다" ], category: "finance" },
+  { title: "배당주 vs 성장주", options: %w[배당주 성장주 반반], category: "finance" },
+  { title: "투자 공부 어디서?", options: %w[유튜브 책 강의 커뮤니티], category: "finance" },
+  { title: "부동산 vs 주식", options: [ "부동산", "주식", "둘 다" ], category: "finance" },
+  { title: "금융 앱 주로 사용하는 건?", options: [ "증권사 앱", "은행 앱", "토스", "카카오페이" ], category: "finance" },
+  { title: "재테크 시작 시기", options: [ "20대 초반", "20대 후반", "30대", "아직 안 함" ], category: "finance" },
+
+  # 연애/썸 (7개)
+  { title: "연상 vs 연하 vs 동갑", options: %w[연상 연하 동갑 상관없음], category: "relationship" },
+  { title: "고백은 누가?", options: [ "내가", "상대가", "자연스럽게", "상관없음" ], category: "relationship" },
+  { title: "데이트 비용 어떻게?", options: [ "더치페이", "번갈아가며", "많이 버는 사람이", "남자가" ], category: "relationship" },
+  { title: "연인과 매일 연락?", options: [ "필수", "가끔", "상관없음" ], category: "relationship" },
+  { title: "결혼은 언제쯤?", options: [ "빨리", "서두르지 않음", "안 할 수도", "이미 함" ], category: "relationship" },
+  { title: "소개팅 vs 자연스러운 만남", options: [ "소개팅", "자연스러운 만남", "앱", "상관없음" ], category: "relationship" },
+  { title: "커플 기념일 중요하게 생각하시나요?", options: [ "매우 중요", "보통", "별로" ], category: "relationship" },
 
   # 19+ (5개)
   { title: "첫 데이트 어디까지 OK?", options: %w[손잡기 포옹 키스 다별로], category: "adult" },
@@ -142,14 +175,7 @@ PRODUCTION_VIEWS = [
   { title: "이상형 조건 1순위는?", options: %w[외모 성격 경제력 유머], category: "adult" },
   { title: "전 애인과 연락하기", options: [ "절대 안 함", "친구로 OK", "상황 따라", "현재도 연락 중" ], category: "adult" },
 
-  # 연애 (5개)
-  { title: "연상 vs 연하 vs 동갑", options: %w[연상 연하 동갑 상관없음], category: "relationship" },
-  { title: "고백은 누가?", options: [ "내가", "상대가", "자연스럽게", "상관없음" ], category: "relationship" },
-  { title: "데이트 비용 어떻게?", options: [ "더치페이", "번갈아가며", "많이 버는 사람이", "남자가" ], category: "relationship" },
-  { title: "연인과 매일 연락?", options: [ "필수", "가끔", "상관없음" ], category: "relationship" },
-  { title: "결혼은 언제쯤?", options: [ "빨리", "서두르지 않음", "안 할 수도", "이미 함" ], category: "relationship" },
-
-  # 기타/트렌드 (5개)
+  # 기타 (5개)
   { title: "인스타 vs 틱톡", options: [ "인스타", "틱톡", "둘 다", "안 함" ], category: "etc" },
   { title: "카톡 vs 문자", options: %w[카톡 문자 전화], category: "etc" },
   { title: "MBTI 믿으세요?", options: [ "믿는다", "안 믿는다", "재미로만" ], category: "etc" },
@@ -212,7 +238,7 @@ created_views = []
 
 PRODUCTION_VIEWS.each_with_index do |data, index|
   author = users.sample
-  category = categories[data[:category]] || categories["daily"]
+  category = categories[data[:category]] || categories["etc"]
 
   view = View.create!(
     user: author,
