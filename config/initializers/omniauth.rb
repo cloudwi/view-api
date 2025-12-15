@@ -5,6 +5,7 @@ Rails.application.config.middleware.use OmniAuth::Builder do
            scope: "account_email"
 end
 
-# 보안: OAuth 시작은 POST만 허용 (CSRF 방지)
-# 콜백은 별도 라우트로 GET 허용 (OAuth 프로바이더가 GET으로 리다이렉트)
-OmniAuth.config.allowed_request_methods = [ :post ]
+# OAuth 인증 시작 및 콜백 모두 GET 요청 허용
+# 보안: 프로덕션에서는 state 파라미터를 통한 CSRF 방지 권장
+OmniAuth.config.allowed_request_methods = [ :post, :get ]
+OmniAuth.config.silence_get_warning = true

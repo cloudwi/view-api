@@ -4,7 +4,8 @@ Rails.application.routes.draw do
     mount Rswag::Ui::Engine => "/api-docs"
     mount Rswag::Api::Engine => "/api-docs"
   end
-  # OmniAuth callbacks
+  # OmniAuth routes
+  get "/auth/:provider", to: "auth#passthru"
   get "/auth/kakao/callback", to: "auth#kakao_callback"
   get "auth/me", to: "auth#me"
 
