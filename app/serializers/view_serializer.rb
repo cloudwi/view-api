@@ -22,7 +22,7 @@ class ViewSerializer
     if @include_comments
       response[:comments] = comments_json
     else
-      response[:comments_count] = @view.comments.size
+      response[:comments_count] = @view.comments_count
     end
 
     response
@@ -31,7 +31,7 @@ class ViewSerializer
   private
 
   def category_json
-    {
+    @category_json ||= {
       id: @view.category.id,
       name: @view.category.name,
       slug: @view.category.slug
@@ -39,7 +39,7 @@ class ViewSerializer
   end
 
   def author_json
-    {
+    @author_json ||= {
       id: @view.user.id,
       nickname: @view.user.nickname
     }
@@ -50,8 +50,7 @@ class ViewSerializer
       {
         id: opt.id,
         content: opt.content,
-        # .length는 이미 로드된 컬렉션 사용 (N+1 방지)
-        votes_count: opt.votes.length
+        votes_count: opt.votes_count
       }
     end
   end
@@ -59,27 +58,21 @@ class ViewSerializer
   def my_vote_json
     return nil unless @current_user
 
-    # 이미 로드된 view_options의 votes에서 찾기 (추가 쿼리 방지)
-    @view.view_options.each do |opt|
-      vote = opt.votes.find { |v| v.user_id == @current_user.id }
-      return { option_id: opt.id } if vote
+    @my_vote_json ||= begin
+      # 이미 로드된 view_options의 votes에서 찾기 (추가 쿼리 방지)
+      @view.view_options.each do |opt|
+        vote = opt.votes.find { |v| v.user_id == @current_user.id }
+        return { option_id: opt.id } if vote
+      end
+      nil
     end
-    nil
   end
 
   def comments_json
-    # 이미 로드된 comments 사용, 정렬은 메모리에서 수행
-    sorted_comments = @view.comments.sort_by(&:created_at)
-    sorted_comments.map do |comment|
-      {
-        id: comment.id,
-        content: comment.content,
-        author: {
-          id: comment.user.id,
-          nickname: comment.user.nickname
-        },
-        created_at: comment.created_at
-      }
+    @comments_json ||= begin
+      # 이미 로드된 comments 사용, 정렬은 메모리에서 수행
+      sorted_comments = @view.comments.sort_by(&:created_at)
+      sorted_comments.map { |comment| CommentSerializer.new(comment).as_json }
     end
   end
 end

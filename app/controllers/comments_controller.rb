@@ -7,7 +7,7 @@ class CommentsController < ApplicationController
   # GET /views/:view_id/comments
   def index
     @comments = @view.comments.includes(:user).order(created_at: :asc)
-    render_success(@comments.map { |comment| serialize_comment(comment) })
+    render_success(@comments.map { |comment| CommentSerializer.new(comment).as_json })
   end
 
   # POST /views/:view_id/comments
@@ -16,7 +16,7 @@ class CommentsController < ApplicationController
     @comment.user = current_user
 
     if @comment.save
-      render_success(serialize_comment(@comment), status: :created)
+      render_success(CommentSerializer.new(@comment).as_json, status: :created)
     else
       render_validation_errors(@comment)
     end
@@ -25,7 +25,7 @@ class CommentsController < ApplicationController
   # PATCH /views/:view_id/comments/:id
   def update
     if @comment.update(comment_params)
-      render_success(serialize_comment(@comment))
+      render_success(CommentSerializer.new(@comment).as_json)
     else
       render_validation_errors(@comment)
     end
@@ -57,18 +57,5 @@ class CommentsController < ApplicationController
 
   def comment_params
     params.require(:comment).permit(:content)
-  end
-
-  def serialize_comment(comment)
-    {
-      id: comment.id,
-      content: comment.content,
-      author: {
-        id: comment.user.id,
-        nickname: comment.user.nickname
-      },
-      created_at: comment.created_at,
-      updated_at: comment.updated_at
-    }
   end
 end

@@ -19,7 +19,7 @@
 #
 class Vote < ApplicationRecord
   belongs_to :user
-  belongs_to :view_option
+  belongs_to :view_option, counter_cache: true
 
   validates :user_id, uniqueness: { scope: :view_option_id, message: "이미 투표했습니다" }
   validate :one_vote_per_view

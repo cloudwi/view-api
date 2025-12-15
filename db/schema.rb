@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_021152) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_145813) do
   create_table "categories", force: :cascade do |t|
     t.boolean "active", default: true, null: false
     t.datetime "created_at", null: false
@@ -31,27 +31,22 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_021152) do
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.integer "view_id", null: false
+    t.index ["created_at"], name: "index_comments_on_created_at"
     t.index ["user_id"], name: "index_comments_on_user_id"
+    t.index ["view_id", "created_at"], name: "index_comments_on_view_id_and_created_at"
     t.index ["view_id"], name: "index_comments_on_view_id"
   end
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "name"
     t.string "nickname"
-    t.string "profile_image"
     t.string "provider"
-    t.datetime "remember_created_at"
-    t.datetime "reset_password_sent_at"
-    t.string "reset_password_token"
     t.string "uid"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["nickname"], name: "index_users_on_nickname", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "view_options", force: :cascade do |t|
@@ -59,17 +54,21 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_021152) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "view_id", null: false
+    t.integer "votes_count", default: 0, null: false
     t.index ["view_id"], name: "index_view_options_on_view_id"
+    t.index ["votes_count"], name: "index_view_options_on_votes_count"
   end
 
   create_table "views", force: :cascade do |t|
     t.integer "category_id", null: false
+    t.integer "comments_count", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.integer "votes_count", default: 0, null: false
     t.index ["category_id"], name: "index_views_on_category_id"
+    t.index ["comments_count"], name: "index_views_on_comments_count"
     t.index ["created_at"], name: "index_views_on_created_at"
     t.index ["title"], name: "index_views_on_title"
     t.index ["user_id"], name: "index_views_on_user_id"

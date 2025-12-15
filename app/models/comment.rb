@@ -18,7 +18,7 @@
 #  view_id  (view_id => views.id)
 #
 class Comment < ApplicationRecord
-  belongs_to :view
+  belongs_to :view, counter_cache: true
   belongs_to :user
 
   validates :content, presence: true, length: { minimum: 1, maximum: 2000 }

@@ -31,30 +31,26 @@ class VotesController < ApplicationController
   private
 
   def set_view
-    @view = View.includes(view_options: :votes).find(params[:view_id])
+    @view = View.includes(:view_options).find(params[:view_id])
   rescue ActiveRecord::RecordNotFound
     render_not_found("View")
   end
 
   def find_user_vote
-    # 이미 로드된 데이터에서 검색 (추가 쿼리 방지)
-    @view.view_options.each do |opt|
-      vote = opt.votes.find { |v| v.user_id == current_user.id }
-      return vote if vote
-    end
-    nil
+    current_user.votes.joins(:view_option)
+                .where(view_options: { view_id: @view.id })
+                .first
   end
 
   def vote_result
-    # 투표 후 데이터 갱신을 위해 reload
-    @view.reload
-    @view.view_options.reload.each { |opt| opt.votes.reload }
+    # 투표 후 counter cache 갱신을 위해 view_options만 reload
+    @view.view_options.reload
 
     options = @view.view_options.map do |opt|
       {
         id: opt.id,
         content: opt.content,
-        votes_count: opt.votes.length
+        votes_count: opt.votes_count
       }
     end
 

@@ -44,7 +44,9 @@ Rails.application.configure do
   config.active_support.report_deprecations = false
 
   # Cache store configuration
-  config.cache_store = :memory_store
+  # memory_store는 메모리 제한이 있으므로 size 설정
+  # 프로덕션에서는 Redis 사용 권장: config.cache_store = :redis_cache_store, { url: ENV['REDIS_URL'] }
+  config.cache_store = :memory_store, { size: 64.megabytes }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.

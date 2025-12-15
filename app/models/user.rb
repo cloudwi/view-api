@@ -40,13 +40,23 @@ class User < ApplicationRecord
   private
 
   def generate_nickname
+    max_attempts = 10
+    attempt = 0
+
     loop do
-      self.nickname = build_nickname
+      attempt += 1
+      self.nickname = build_nickname(attempt > 5)
       break unless User.exists?(nickname: nickname)
+
+      # 최대 시도 횟수 초과 시 랜덤 숫자 추가
+      if attempt >= max_attempts
+        self.nickname = "#{build_nickname(false)}_#{SecureRandom.hex(4)}"
+        break
+      end
     end
   end
 
-  def build_nickname
+  def build_nickname(with_suffix = false)
     patterns = [
       -> { "#{adjective} #{noun}" },
       -> { "#{noun} #{verb} #{noun2}" },
@@ -56,7 +66,8 @@ class User < ApplicationRecord
       -> { "#{place} #{noun} #{role}" }
     ]
 
-    patterns.sample.call
+    base = patterns.sample.call
+    with_suffix ? "#{base}#{rand(1000..9999)}" : base
   end
 
   def adjective

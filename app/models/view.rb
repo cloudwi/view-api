@@ -44,12 +44,19 @@ class View < ApplicationRecord
   scope :sort_by_latest, -> { order(created_at: :desc) }
   scope :sort_by_most_votes, -> { order(votes_count: :desc, created_at: :desc) }
   scope :sort_by_hot, -> {
+    # PostgreSQL과 SQLite 모두 지원하는 날짜 계산
+    days_diff_sql = if connection.adapter_name == "PostgreSQL"
+                      "EXTRACT(EPOCH FROM (CURRENT_TIMESTAMP - views.created_at)) / 86400"
+    else
+                      "julianday('now') - julianday(views.created_at)"
+    end
+
     select("views.*,
             (views.votes_count +
              (SELECT COUNT(*) FROM comments WHERE comments.view_id = views.id) * 2 +
              CASE
-               WHEN julianday('now') - julianday(views.created_at) <= 1 THEN 50
-               WHEN julianday('now') - julianday(views.created_at) <= 7 THEN 20
+               WHEN #{days_diff_sql} <= 1 THEN 50
+               WHEN #{days_diff_sql} <= 7 THEN 20
                ELSE 0
              END) as popularity_score")
       .order("popularity_score DESC, views.created_at DESC")
