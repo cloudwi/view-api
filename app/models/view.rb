@@ -25,7 +25,21 @@ class View < ApplicationRecord
 
   accepts_nested_attributes_for :view_options, allow_destroy: true
 
+  # 카테고리
+  enum :category, {
+    daily: 0,        # 일상
+    food: 1,         # 음식
+    relationship: 2, # 연애
+    work: 3,         # 직장
+    hobby: 4,        # 취미
+    fashion: 5,      # 패션뷰티
+    game: 6,         # 게임
+    travel: 7,       # 여행
+    etc: 8           # 기타
+  }, prefix: true
+
   validates :title, presence: true, length: { minimum: 2, maximum: 200 }
+  validates :category, presence: true
   validate :options_count_within_range
 
   # 검색

@@ -81,6 +81,11 @@ RSpec.configure do |config|
             properties: {
               id: { type: :integer },
               title: { type: :string },
+              category: {
+                type: :string,
+                enum: %w[daily food relationship work hobby fashion game travel etc],
+                description: '카테고리'
+              },
               author: { '$ref' => '#/components/schemas/Author' },
               options: {
                 type: :array,
@@ -93,13 +98,18 @@ RSpec.configure do |config|
               updated_at: { type: :string, format: 'date-time' },
               edited: { type: :boolean }
             },
-            required: %w[id title author options total_votes created_at updated_at edited]
+            required: %w[id title category author options total_votes created_at updated_at edited]
           },
           ViewDetail: {
             type: :object,
             properties: {
               id: { type: :integer },
               title: { type: :string },
+              category: {
+                type: :string,
+                enum: %w[daily food relationship work hobby fashion game travel etc],
+                description: '카테고리'
+              },
               author: { '$ref' => '#/components/schemas/Author' },
               options: {
                 type: :array,
@@ -115,7 +125,7 @@ RSpec.configure do |config|
               updated_at: { type: :string, format: 'date-time' },
               edited: { type: :boolean }
             },
-            required: %w[id title author options total_votes comments created_at updated_at edited]
+            required: %w[id title category author options total_votes comments created_at updated_at edited]
           },
           ViewInput: {
             type: :object,

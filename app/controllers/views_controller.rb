@@ -16,6 +16,7 @@ class ViewsController < ApplicationController
     @views = View.includes(:user, view_options: :votes)
                  .search_by_title(params[:q]&.strip)
                  .authored_by(author_id)
+                 .then { |scope| apply_category_filter(scope) }
                  .then { |scope| apply_vote_filter(scope) }
                  .sorted_by(params[:sort])
 
@@ -110,9 +111,20 @@ class ViewsController < ApplicationController
     end
   end
 
+  def apply_category_filter(scope)
+    return scope if params[:category].blank?
+
+    if View.categories.key?(params[:category])
+      scope.where(category: params[:category])
+    else
+      scope
+    end
+  end
+
   def view_params
     params.require(:view).permit(
       :title,
+      :category,
       view_options_attributes: [ :id, :content, :_destroy ]
     )
   end

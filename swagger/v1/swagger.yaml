@@ -232,6 +232,34 @@ paths:
         description: "작성자 필터 (me: 내가 작성한 뷰만 조회, 인증 필요):\n * `me` \n "
         schema:
           type: string
+      - name: vote_filter
+        in: query
+        required: false
+        enum:
+        - all
+        - voted
+        - not_voted
+        description: '투표 상태 필터 (인증 필요): all - 전체(기본값), voted - 내가 투표한 뷰, not_voted
+          - 미투표 뷰'
+        schema:
+          type: string
+      - name: category
+        in: query
+        required: false
+        enum:
+        - daily
+        - food
+        - relationship
+        - work
+        - hobby
+        - fashion
+        - game
+        - travel
+        - etc
+        description: '카테고리 필터: daily(일상), food(음식), relationship(연애), work(직장), hobby(취미),
+          fashion(패션뷰티), game(게임), travel(여행), etc(기타)'
+        schema:
+          type: string
       - name: sort
         in: query
         required: false
@@ -299,6 +327,19 @@ paths:
                     title:
                       type: string
                       description: 뷰 제목
+                    category:
+                      type: string
+                      enum:
+                      - daily
+                      - food
+                      - relationship
+                      - work
+                      - hobby
+                      - fashion
+                      - game
+                      - travel
+                      - etc
+                      description: '카테고리 (기본값: daily)'
                     view_options_attributes:
                       type: array
                       description: 선택지 목록 (최소 2개)
@@ -571,6 +612,19 @@ components:
           type: integer
         title:
           type: string
+        category:
+          type: string
+          enum:
+          - daily
+          - food
+          - relationship
+          - work
+          - hobby
+          - fashion
+          - game
+          - travel
+          - etc
+          description: 카테고리
         author:
           "$ref": "#/components/schemas/Author"
         options:
@@ -594,6 +648,7 @@ components:
       required:
       - id
       - title
+      - category
       - author
       - options
       - total_votes
@@ -607,6 +662,19 @@ components:
           type: integer
         title:
           type: string
+        category:
+          type: string
+          enum:
+          - daily
+          - food
+          - relationship
+          - work
+          - hobby
+          - fashion
+          - game
+          - travel
+          - etc
+          description: 카테고리
         author:
           "$ref": "#/components/schemas/Author"
         options:
@@ -632,6 +700,7 @@ components:
       required:
       - id
       - title
+      - category
       - author
       - options
       - total_votes

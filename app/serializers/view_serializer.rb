@@ -9,6 +9,7 @@ class ViewSerializer
     response = {
       id: @view.id,
       title: @view.title,
+      category: @view.category,
       author: author_json,
       options: options_json,
       total_votes: options_json.sum { |o| o[:votes_count] },

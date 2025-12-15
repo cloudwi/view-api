@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_12_062039) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_012401) do
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -24,13 +24,20 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_062039) do
   create_table "users", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "name"
     t.string "nickname"
+    t.string "profile_image"
     t.string "provider"
+    t.datetime "remember_created_at"
+    t.datetime "reset_password_sent_at"
+    t.string "reset_password_token"
     t.string "uid"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["nickname"], name: "index_users_on_nickname", unique: true
     t.index ["provider", "uid"], name: "index_users_on_provider_and_uid", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "view_options", force: :cascade do |t|
@@ -42,11 +49,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_12_062039) do
   end
 
   create_table "views", force: :cascade do |t|
+    t.integer "category", default: 0, null: false
     t.datetime "created_at", null: false
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.integer "votes_count", default: 0, null: false
+    t.index ["category"], name: "index_views_on_category"
     t.index ["created_at"], name: "index_views_on_created_at"
     t.index ["title"], name: "index_views_on_title"
     t.index ["user_id"], name: "index_views_on_user_id"

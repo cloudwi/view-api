@@ -13,6 +13,12 @@ RSpec.describe 'Views API', type: :request do
       parameter name: :author, in: :query, type: :string, required: false,
                 enum: %w[me],
                 description: '작성자 필터 (me: 내가 작성한 뷰만 조회, 인증 필요)'
+      parameter name: :vote_filter, in: :query, type: :string, required: false,
+                enum: %w[all voted not_voted],
+                description: '투표 상태 필터 (인증 필요): all - 전체(기본값), voted - 내가 투표한 뷰, not_voted - 미투표 뷰'
+      parameter name: :category, in: :query, type: :string, required: false,
+                enum: %w[daily food relationship work hobby fashion game travel etc],
+                description: '카테고리 필터: daily(일상), food(음식), relationship(연애), work(직장), hobby(취미), fashion(패션뷰티), game(게임), travel(여행), etc(기타)'
       parameter name: :sort, in: :query, type: :string, required: false,
                 enum: %w[latest most_votes hot],
                 description: '정렬 기준 (latest: 최신순, most_votes: 투표 많은 순, hot: 인기순 - 투표수+댓글수+시간가중)'
@@ -41,6 +47,11 @@ RSpec.describe 'Views API', type: :request do
             type: :object,
             properties: {
               title: { type: :string, description: '뷰 제목' },
+              category: {
+                type: :string,
+                enum: %w[daily food relationship work hobby fashion game travel etc],
+                description: '카테고리 (기본값: daily)'
+              },
               view_options_attributes: {
                 type: :array,
                 description: '선택지 목록 (최소 2개)',
