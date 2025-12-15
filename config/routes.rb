@@ -1,9 +1,15 @@
 Rails.application.routes.draw do
-  mount Rswag::Ui::Engine => "/api-docs"
-  mount Rswag::Api::Engine => "/api-docs"
+  # Swagger UI - 운영 환경에서는 접근 차단
+  unless Rails.env.production?
+    mount Rswag::Ui::Engine => "/api-docs"
+    mount Rswag::Api::Engine => "/api-docs"
+  end
   # OmniAuth callbacks
   get "/auth/kakao/callback", to: "auth#kakao_callback"
   get "auth/me", to: "auth#me"
+
+  # Categories API
+  resources :categories, only: [ :index ]
 
   # Views API
   resources :views, only: [ :index, :show, :create, :update, :destroy ] do

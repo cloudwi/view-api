@@ -13,7 +13,7 @@ class ViewsController < ApplicationController
   def index
     author_id = params[:author] == "me" ? current_user&.id : nil
 
-    @views = View.includes(:user, view_options: :votes)
+    @views = View.includes(:user, :category, view_options: :votes)
                  .search_by_title(params[:q]&.strip)
                  .authored_by(author_id)
                  .then { |scope| apply_category_filter(scope) }
@@ -68,7 +68,7 @@ class ViewsController < ApplicationController
   private
 
   def set_view
-    @view = View.includes(:user, view_options: :votes, comments: :user).find(params[:id])
+    @view = View.includes(:user, :category, view_options: :votes, comments: :user).find(params[:id])
   rescue ActiveRecord::RecordNotFound
     render_not_found("View")
   end
@@ -114,17 +114,14 @@ class ViewsController < ApplicationController
   def apply_category_filter(scope)
     return scope if params[:category].blank?
 
-    if View.categories.key?(params[:category])
-      scope.where(category: params[:category])
-    else
-      scope
-    end
+    category = Category.find_by(slug: params[:category])
+    category ? scope.where(category_id: category.id) : scope
   end
 
   def view_params
     params.require(:view).permit(
       :title,
-      :category,
+      :category_id,
       view_options_attributes: [ :id, :content, :_destroy ]
     )
   end

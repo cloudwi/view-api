@@ -10,7 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2025_12_15_012401) do
+ActiveRecord::Schema[8.1].define(version: 2025_12_15_021152) do
+  create_table "categories", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "description"
+    t.integer "display_order", default: 0, null: false
+    t.string "icon"
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active"], name: "index_categories_on_active"
+    t.index ["display_order"], name: "index_categories_on_display_order"
+    t.index ["slug"], name: "index_categories_on_slug", unique: true
+  end
+
   create_table "comments", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -49,13 +63,13 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_012401) do
   end
 
   create_table "views", force: :cascade do |t|
-    t.integer "category", default: 0, null: false
+    t.integer "category_id", null: false
     t.datetime "created_at", null: false
     t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.integer "votes_count", default: 0, null: false
-    t.index ["category"], name: "index_views_on_category"
+    t.index ["category_id"], name: "index_views_on_category_id"
     t.index ["created_at"], name: "index_views_on_created_at"
     t.index ["title"], name: "index_views_on_title"
     t.index ["user_id"], name: "index_views_on_user_id"
@@ -75,6 +89,7 @@ ActiveRecord::Schema[8.1].define(version: 2025_12_15_012401) do
   add_foreign_key "comments", "users"
   add_foreign_key "comments", "views"
   add_foreign_key "view_options", "views"
+  add_foreign_key "views", "categories"
   add_foreign_key "views", "users"
   add_foreign_key "votes", "users"
   add_foreign_key "votes", "view_options"

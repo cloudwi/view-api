@@ -66,6 +66,26 @@ RSpec.configure do |config|
               option_id: { type: :integer }
             }
           },
+          Category: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              name: { type: :string },
+              slug: { type: :string },
+              description: { type: :string, nullable: true },
+              icon: { type: :string, nullable: true }
+            },
+            required: %w[id name slug]
+          },
+          CategoryRef: {
+            type: :object,
+            properties: {
+              id: { type: :integer },
+              name: { type: :string },
+              slug: { type: :string }
+            },
+            required: %w[id name slug]
+          },
           Comment: {
             type: :object,
             properties: {
@@ -81,11 +101,7 @@ RSpec.configure do |config|
             properties: {
               id: { type: :integer },
               title: { type: :string },
-              category: {
-                type: :string,
-                enum: %w[daily food relationship work hobby fashion game travel etc],
-                description: '카테고리'
-              },
+              category: { '$ref' => '#/components/schemas/CategoryRef' },
               author: { '$ref' => '#/components/schemas/Author' },
               options: {
                 type: :array,
@@ -105,11 +121,7 @@ RSpec.configure do |config|
             properties: {
               id: { type: :integer },
               title: { type: :string },
-              category: {
-                type: :string,
-                enum: %w[daily food relationship work hobby fashion game travel etc],
-                description: '카테고리'
-              },
+              category: { '$ref' => '#/components/schemas/CategoryRef' },
               author: { '$ref' => '#/components/schemas/Author' },
               options: {
                 type: :array,
