@@ -53,6 +53,14 @@ class View < ApplicationRecord
       .order("popularity_score DESC, views.created_at DESC")
   }
 
+  # 투표 필터
+  scope :voted_by, ->(user) {
+    where(id: ViewOption.joins(:votes).where(votes: { user_id: user.id }).select(:view_id))
+  }
+  scope :not_voted_by, ->(user) {
+    where.not(id: ViewOption.joins(:votes).where(votes: { user_id: user.id }).select(:view_id))
+  }
+
   def self.sorted_by(sort_type)
     case sort_type&.to_s
     when "most_votes"

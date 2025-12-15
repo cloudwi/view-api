@@ -3,6 +3,7 @@ class ViewsController < ApplicationController
   before_action :set_view, only: [ :show, :update, :destroy ]
   before_action :authorize_user!, only: [ :update, :destroy ]
   before_action :validate_search_query, only: [ :index ]
+  before_action :validate_vote_filter, only: [ :index ]
 
   include Paginatable
 
@@ -15,6 +16,7 @@ class ViewsController < ApplicationController
     @views = View.includes(:user, view_options: :votes)
                  .search_by_title(params[:q]&.strip)
                  .authored_by(author_id)
+                 .then { |scope| apply_vote_filter(scope) }
                  .sorted_by(params[:sort])
 
     @views = apply_cursor_pagination(@views).to_a
@@ -80,6 +82,31 @@ class ViewsController < ApplicationController
 
     if query.length > SEARCH_QUERY_MAX_LENGTH
       render_error("QUERY_TOO_LONG", "검색어는 #{SEARCH_QUERY_MAX_LENGTH}자 이내여야 합니다")
+    end
+  end
+
+  def validate_vote_filter
+    filter = params[:vote_filter]
+    return if filter.blank? || filter == "all"
+
+    unless %w[voted not_voted].include?(filter)
+      render_error("INVALID_VOTE_FILTER", "vote_filter는 all, voted, not_voted 중 하나여야 합니다")
+      return
+    end
+
+    unless current_user
+      render_error("LOGIN_REQUIRED", "투표 필터를 사용하려면 로그인이 필요합니다", status: :unauthorized)
+    end
+  end
+
+  def apply_vote_filter(scope)
+    case params[:vote_filter]
+    when "voted"
+      scope.voted_by(current_user)
+    when "not_voted"
+      scope.not_voted_by(current_user)
+    else
+      scope
     end
   end
 
